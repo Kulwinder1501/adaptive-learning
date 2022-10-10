@@ -1,0 +1,30 @@
+.open_dropdown {
+  pointer-events: all !important;
+  top: 27px !important;
+  left: -169px !important;
+}
+
+.view_question_latex {
+  border: 1px solid;
+  background-color: white;
+  border: 0.0625rem solid #d1d7e0;
+  border-radius: 10px;
+  min-height: 100px;
+  padding: 5px;
+}
+.view_option_latex {
+  border: 1px solid;
+  background-color: white;
+  border: 0.0625rem solid #d1d7e0;
+  border-radius: 10px;
+  min-height: 42px;
+  text-align: center;
+}
+
+.mjx-chtml {
+  white-space: normal !important;
+}
+
+.bg-loader {
+  background-color: rgb(245 248 251 / 70%) !important;
+}
