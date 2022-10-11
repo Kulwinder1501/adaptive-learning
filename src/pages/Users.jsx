@@ -25,7 +25,7 @@ function Users() {
       const result = await httpClient.post(
         `${
           ACTIVITY.ALL_ACTIVITY
-        }?page=${page}&size=${10}&adminId=${search_text}`
+        }?page=${page}&size=${10}&email=${search_text}`
       );
       setData(result.data.activities);
       setTotalPages(result.data.totalPages);
