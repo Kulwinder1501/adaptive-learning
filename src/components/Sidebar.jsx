@@ -137,6 +137,11 @@ function Sidebar() {
                 link={"/add-question"}
                 icon={faChartPie}
               />
+                    <NavItem
+                    title="Add Exam"
+                    link={"/add-exam"}
+                    icon={faChartPie}
+                  />
               {userType === "superadmin" && (
                 <>
                   <NavItem

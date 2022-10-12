@@ -8,7 +8,14 @@ export const QUESTION = {
   UPDATE_QUESTION: "question/updateQuestion/{id}",
   VIEW_ALL_FIELDS: "question/viewAllfields",
 };
-
+export const EXAM = {
+  GET_ALL: "question/viewAllFields",
+  ADD_EXAM: "question/addQuestionFields",
+  VIEW_QUESTION: "question/viewQuestionById/{id}",
+  DELETE_QUESTION: "question/deleteQuestion/{id}",
+  UPDATE_QUESTION: "question/updateQuestion/{id}",
+  VIEW_ALL_FIELDS: "question/viewAllfields",
+};
 export const ADMIN = {
   CREATE_ADMIN: "admin/createAdmin",
   VIEW_ALL: "admin/viewAllAdmins",
