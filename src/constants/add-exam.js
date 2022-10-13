@@ -1,3 +1,5 @@
+import * as yup from 'yup'
+
 export const initialValues = {
   examType: "",
   class: "",
@@ -32,3 +34,16 @@ export const responseData = [
   "allTopic",
   "allUnit",
 ];
+
+
+
+export const validationSchema = yup.object().shape({
+  examType: yup.string().required("ExamType is required"),
+  class: yup.string().required("Class is required"),
+  subject: yup.string().required("Subject is required"),
+  unit: yup.string().required("Unit is required"),
+  chapter: yup.string().required("Chapter is required"),
+  topic: yup.string().required("Topic is required"),
+  subTopic: yup.string().required("subTopic is required"),
+  questionType: yup.string().required("questionType is required"),
+});

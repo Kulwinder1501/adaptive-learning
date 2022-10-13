@@ -6,7 +6,6 @@ function LogOut() {
   useEffect(() => {
     localStorage.removeItem("user");
     localStorage.removeItem("adminType");
-
     navigate("/");
   }, []);
 }

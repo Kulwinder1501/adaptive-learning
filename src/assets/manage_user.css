@@ -28,3 +28,41 @@
 .bg-loader {
   background-color: rgb(245 248 251 / 70%) !important;
 }
+p {
+  width: 230px;
+  border-radius: 7px;
+  border: "1px solid #f9f9f9";
+  margin: 0px;
+  padding: 6px;
+  cursor: "pointer";
+  position:"absolute";
+  background-color:"white"
+}
+.lili {
+  list-style-type: none;
+  cursor: pointer;
+}
+/* .main-class > input */
+
+@media screen and (min-width: 300px) and (max-width: 600px) {
+  .main-class > .inputj {
+    width: 100% !important;
+    height: 100px;
+    /* padding: 0; */
+  }
+}
+input::-webkit-input-placeholder {
+  text-transform: capitalize;
+}
+
+input:-moz-placeholder {
+  text-transform: capitalize;
+}
+
+input::-moz-placeholder {
+  text-transform: capitalize;
+}
+
+input:-ms-input-placeholder {
+  text-transform: capitalize;
+}

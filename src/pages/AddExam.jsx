@@ -2,27 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Button, Row, Col, Form } from "@themesberg/react-bootstrap";
 import Sidebar from "../components/Sidebar";
 import { httpClient } from "../constants/api";
-import { EXAM, QUESTION } from "../constants/AppConst";
-import { useParams, useNavigate } from "react-router-dom";
+import { EXAM } from "../constants/AppConst";
+import { useParams  } from "react-router-dom";
 import "../assets/manage_user.css";
 import Preloader from "../components/Preloader";
 import { Formik } from "formik";
-import { Dropdown } from "semantic-ui-react";
-import { initialValues, responseData, showblock } from "../constants/add-exam";
+import { initialValues, responseData, showblock, validationSchema } from "../constants/add-exam";
 
 function AddExam() {
   const { id } = useParams();
-  const [data, setData] = useState("")
   const [allData, setAllData] = useState([])
   const [show,setShow] = useState(showblock)
-const countryOptions = [
-  { key: 'af', value: 'af', flag: 'af', text: 'Afghanistan' },
-  { key: 'ax', value: 'ax', flag: 'ax', text: 'Aland Islands' },
-  { key: 'al', value: 'al', flag: 'al', text: 'Albania' },
-  { key: 'dz', value: 'dz', flag: 'dz', text: 'Algeria' },
-  { key: 'as', value: 'as', flag: 'as', text: 'American Samoa' },
+  const [loading, setLoading] = useState(false)
 
-]
 const obj = async () => {
 
   const result = await httpClient.get(EXAM.GET_ALL).then((res)=> {
@@ -30,35 +22,57 @@ const obj = async () => {
     console.log(res.data)
   });
 }
+const postData = async (values) => {
+
+  
+  try {
+    setLoading(true);
+    
+    await httpClient.post(EXAM.ADD_EXAM,values)
+  } catch (err) {
+  } finally {
+    setLoading(false);
+  }
+  
+}
  const filterArray = (i) => {
-  console.log(show)
   const result = showblock.map((value,index)=> {
     if(index== i){
       value = true
     }
     return value
  })
-
- Object.keys(initialValues).map((value) => console.log(value))
- console.log(result)
  setShow(result)
  }
 useEffect(() => {
 obj()
 }, [])
+const search = (index,searchTerm) => {
+const results = [];
+const filterData = responseData[index]
+console.log("Map Data"+index,allData[filterData])
+ const dat = allData[filterData]?.map((item) => {
+    const name = item.name.toString().toLowerCase();
+    const newName = item.name.toString().toUpperCase()
+    if (name.includes(searchTerm)||newName.includes(searchTerm)) {
+      results.push(item)
+    }
 
-console.log(show)
+})
+  return  results
+};
   return (
    <Formik
      initialValues={initialValues}
-     onSubmit={values => console.log(values)}
+    //  validationSchema={validationSchema}
+     onSubmit={values => postData(values)}
    >
-     {({ handleChange, handleBlur, handleSubmit, values }) => (
+     {({ handleChange,errors,touched ,handleBlur, setFieldValue,handleSubmit, values }) => (
     <>
 
       
       <Sidebar />
-      <main className="content">
+      <main className="content main-class" onClick={()=> setShow(showblock)}>
         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
           <h5>
             Add Exam:
@@ -75,148 +89,57 @@ console.log(show)
   <Form.Control
               type="text"
               placeholder={value}
+              
               name={value}
-              required
               value={values[value]}
-              onChange={(e) => {handleChange(e);filterArray(index)}}
-              // onClick={()=> setShow('block')}
-              autoComplete="off"
-              style={{ width: 'auto' }}
+              onBlur={()=> {search("");filterArray(index)}}
+              onChange={(e) => {handleChange(e);search(e.target.value);filterArray(index)}}
+               autoComplete="off"
+              style={{width:"auto"}}
+              className="inputj"
               />
-             <p
-            style={{
-              width: 300,
-              borderRadius: 7,
-              border: "1px solid #f9f9f9",
-              margin: 0,
-              padding: 6,
-              display:show[index] ? "block":"none",
-              cursor: "pointer",
+            
+            <div style={{display:show[index]?"block":"none"}}>
+           <p style={{
+              // width: 230,
+              // borderRadius: 7,
+              // border: "1px solid #f9f9f9",
+              // margin: 0,
+              // padding: 6;,
+              // cursor: "pointer";
               position:"absolute",
               backgroundColor:"white"
-            }}
-          >{
-            ["IIT","NEET"].map((number) => (
-              <li
-              style={{ listStyleType: "none" }}
-              key={number}
-              // onClick={() => newFunc(number.text)}
+           }}>{
+            search(index,values[value]).map((valuee,index) => (
+              <li 
+              className="lili"
+              key={index}
+              onClick={() => {setFieldValue(value.toString(),valuee.name);setShow(showblock)}}
               >
-                {number}
+               {valuee.name?valuee.name:"No Search Results"} 
               </li>
-            ))
-            }
-          </p>
-              </Form.Group>
-            </Col>
-                ))}
-            <Col xs={12} xl={3} className="mb-4">
-              <Form.Group className="mb-3">
-             
-              </Form.Group>
-            </Col>
-            <Col xs={12} xl={3} className="mb-4">
-              <Form.Group className="mb-3">
-               
-              </Form.Group>
-            </Col>
-            <Col xs={12} xl={3} className="mb-4">
-              <Form.Group className="mb-3">
+            ))}
             
+          </p>
+            </div> 
               </Form.Group>
             </Col>
-          </Row>
-          <Row>
-            <Col xs={12} xl={3} className="mb-4">
-              <Form.Group className="mb-3">
-              
-              </Form.Group>
-            </Col>
-            <Col xs={12} xl={3} className="mb-4">
-              <Form.Group className="mb-3">
-              
-              </Form.Group>
-            </Col>
-            <Col xs={12} xl={3} className="mb-4">
-              <Form.Group className="mb-3">
                 
-              </Form.Group>
-            </Col>
-            <Col xs={12} xl={3} className="mb-4">
-              <Form.Group className="mb-3">
-               
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={12} xl={3} className="mb-4">
-              <Form.Group className="mb-3">
-               
-              </Form.Group>
-            </Col>
-            <Col xs={12} xl={3} className="mb-4">
-              <Form.Group className="mb-3">
+             ))} 
            
-              </Form.Group>
-            </Col>
           </Row>
-          <Row>
-            <Col xs={12} xl={3} className="mb-4">
-              <Form.Group className="mb-3">
-               
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={12}>
-              <Form.Group className="mb-3">
-                <Form.Label>QUESTION LATEX (TEXT BOX)</Form.Label>
-             
-              </Form.Group>
-            </Col>
-            <Col md={12}>
-              <Form.Group className="mb-3">
-                <Form.Label>QUESTION LATEX VIEW</Form.Label>
-              </Form.Group>
-            </Col>
-          </Row>
+          
        
           <Row>
-            <Col md={12}>
-              <Form.Group className="mb-3">
-                <Form.Label>SOLUTION LATEX (TEXT BOX)</Form.Label>
-               
-              </Form.Group>
-            </Col>
-            <Col md={12}>
-              <Form.Group className="mb-3">
-                <Form.Label>SOLUTION LATEX VIEW</Form.Label>
-          
-              
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6} className="text-end">
-              <Button
-                variant="danger"
-                className="m-1 "
-                size="lg"
-                onClick={() => console.log("/dashboard")}
-              >
-                Cancel
-              </Button>
-            </Col>
-
             <Col md={6}>
-              <Button variant="success" className="m-1" size="lg" type="submit">
+              <Button variant="success" onClick={handleSubmit} className="m-1" size="lg" type="submit">
                 {id ? "Update" : "Submit"}
               </Button>
             </Col>
           </Row>
         </Form>
       </main>
-      {/* <Preloader show={loading} /> */}
+      <Preloader show={loading} />
     </>
                 )}
                 </Formik>
