@@ -7,13 +7,15 @@ import { useParams  } from "react-router-dom";
 import "../assets/manage_user.css";
 import Preloader from "../components/Preloader";
 import { Formik } from "formik";
-import { initialValues, responseData, showblock, validationSchema } from "../constants/add-exam";
-
+import { initialValues, responseData, showblock, Schema1,Schema2 } from "../constants/add-exam";
+import { app } from "../firebase/fireabseConfig";
+// import firebase from ''
 function AddExam() {
   const { id } = useParams();
   const [allData, setAllData] = useState([])
   const [show,setShow] = useState(showblock)
   const [loading, setLoading] = useState(false)
+  const [validation ,setValidation]=useState(Schema2)
 
 const obj = async () => {
 
@@ -22,6 +24,11 @@ const obj = async () => {
     console.log(res.data)
   });
 }
+useEffect(() => {
+ var storageRef = app;
+console.log(storageRef)
+}, [])
+
 const postData = async (values) => {
 
   
@@ -64,8 +71,11 @@ console.log("Map Data"+index,allData[filterData])
   return (
    <Formik
      initialValues={initialValues}
-    //  validationSchema={validationSchema}
-     onSubmit={values => postData(values)}
+     validationSchema={validation}
+     onSubmit={values => 
+      alert("SUbmit Worked")
+      // postData(values)
+    }
    >
      {({ handleChange,errors,touched ,handleBlur, setFieldValue,handleSubmit, values }) => (
     <>
@@ -78,7 +88,7 @@ console.log("Map Data"+index,allData[filterData])
             Add Exam:
           </h5>
         </div>
-        <Form onSubmit={() => console.log("Hello")}>
+        <Form >
           <Row>
             {Object.keys(initialValues).map((value,index) => (
 
@@ -89,7 +99,7 @@ console.log("Map Data"+index,allData[filterData])
   <Form.Control
               type="text"
               placeholder={value}
-              
+              required
               name={value}
               value={values[value]}
               onBlur={()=> {search("");filterArray(index)}}
@@ -98,18 +108,11 @@ console.log("Map Data"+index,allData[filterData])
               style={{width:"auto"}}
               className="inputj"
               />
-            
             <div style={{display:show[index]?"block":"none"}}>
            <p style={{
-              // width: 230,
-              // borderRadius: 7,
-              // border: "1px solid #f9f9f9",
-              // margin: 0,
-              // padding: 6;,
-              // cursor: "pointer";
-              position:"absolute",
-              backgroundColor:"white"
-           }}>{
+             position:"absolute",
+             backgroundColor:"white"
+            }}>{
             search(index,values[value]).map((valuee,index) => (
               <li 
               className="lili"
@@ -123,6 +126,7 @@ console.log("Map Data"+index,allData[filterData])
           </p>
             </div> 
               </Form.Group>
+            <p className="error-message">{errors[value]}</p>
             </Col>
                 
              ))} 

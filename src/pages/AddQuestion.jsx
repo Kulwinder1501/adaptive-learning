@@ -11,7 +11,8 @@ import Preloader from "../components/Preloader";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
 import $ from "jquery";
 import parse from "html-react-parser";
-
+import { storage } from '../firebase/fireabseConfig';
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 const config = {
   loader: { load: ["[tex]/html"] },
   tex: {
@@ -28,8 +29,12 @@ const config = {
 };
 // const test =
 //   "<div> You don't have to worry <br/> about nesting components inside a MathJax component, the math will be found and converted <span>($10 / 3 \\approx 3.33$)</span> <br /> \\(\\frac{25x}{10} = 2^{10}\\) \\(\\vec{B}\\) </div>";
-
 function AddViewQuestion() {
+const [imgUrl, setImgUrl] = useState();
+const [progresspercent, setProgresspercent] = useState(0);
+
+const [percent, setPercent] = useState()
+
   const { id } = useParams();
   const navigate = useNavigate();
   const userType = localStorage.getItem("adminType");
@@ -107,32 +112,60 @@ function AddViewQuestion() {
       setLoading(false);
     }
   };
-
+  const [file, setFile] = useState("");
   const handleChecked = (value) => {
     if (value && values.correctAns) {
       return values.correctAns === value ? true : false;
     } else return false;
   };
-
+  function handleImageChange(event) {
+    setFile(event.target.files[0]);
+}
+const handleUpload = (name ,check) => {
+  if (!file) {
+      alert("Please upload an image first!");
+  }
+  const storageRef = ref(storage, `/images/${file.name}`);
+  const uploadTask = uploadBytesResumable(storageRef, file);
+  console.log("Upload Task",uploadTask)
+  uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+          const percent = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setPercent(percent);
+      },
+      (err) => console.log(err),
+      () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              console.log("Download URL",url);
+              const doubleCheck = values[name] == undefined ? "":values[name]
+              const dataa = doubleCheck + `\n <img src="${url}"/>`
+    setValues({ ...values, [name]: dataa });
+          });
+      }
+  );
+};
   const handleLatexData = (text) => {
     // console.log({ text });
-    const test = text.replace(new RegExp("\f"), "\\f");
-    let find = "<latex>";
-    let re = new RegExp(find, "g");
-    let str = test.replace(re, "\\(");
+    // const test = text.replace(new RegExp("\f"), "\\f");
+    // let find = "<latex>";
+    // let re = new RegExp(find, "g");
+    // // let str = test.replace(re, "\\(");
 
-    let find2 = "</latex>";
-    let re2 = new RegExp(find2, "g");
+    // let find2 = "</latex>";
+    // let re2 = new RegExp(find2, "g");
 
-    let str2 = str.replace(re2, `\\)`);
+    // let str2 = str.replace(re2, `\\)`);
 
-    let find3 = "//";
-    let re3 = new RegExp(find3, "g");
+    // let find3 = "//";
+    // let re3 = new RegExp(find3, "g");
 
-    let str3 = str2.replace(re3, "/");
-    // console.log({ str3 });
+    // let str3 = str2.replace(re3, "/");
+    // // console.log({ str3 });
 
-    return parse(str3);
+    // return parse(str3);
   };
 
   return (
@@ -332,6 +365,18 @@ function AddViewQuestion() {
               </Form.Group>
             </Col>
           </Row>
+          <input type="file" onChange={handleImageChange} accept="/image/*" />
+            <Button onClick={()=>handleUpload("quesLatex")}>Upload Question Latex</Button>
+      {
+        !imgUrl &&
+        <div className='outerbar'>
+          <div className='innerbar' style={{ width: `${progresspercent}%` }}>{progresspercent}%</div>
+        </div>
+      }
+      {
+        imgUrl &&
+        <img src={imgUrl} alt='uploaded file' height={200} />
+      }
           <Row>
             <Col md={12}>
               <Form.Group className="mb-3">
@@ -364,6 +409,11 @@ function AddViewQuestion() {
           <fieldset>
             <Row>
               <Form.Label>OPTION LATEX</Form.Label>
+              <div style={{display:"flex"}}>
+
+           <input type="file" onChange={handleImageChange} accept="/image/*" />
+            <Button onClick={()=>handleUpload("option1")}>Option 1</Button>  
+              </div>
               <Col md={1} xs={1} className="mt-3">
                 <Form.Check
                   required
@@ -401,6 +451,11 @@ function AddViewQuestion() {
                   </div>
                 </Form.Group>
               </Col>
+ <div style={{display:"flex"}}>
+
+           <input type="file" onChange={handleImageChange} accept="/image/*" />
+            <Button onClick={()=>handleUpload("option2")}>Option 2</Button>  
+              </div>
               <Col md={1} xs={1} className="mt-3">
                 <Form.Check
                   required
@@ -435,7 +490,11 @@ function AddViewQuestion() {
                     </MathJaxContext>
                   )}
                 </div>
-              </Col>
+              </Col> <div style={{display:"flex"}}>
+
+           <input type="file" onChange={handleImageChange} accept="/image/*" />
+            <Button onClick={()=>handleUpload("option3")}>Option 3</Button>  
+              </div>
               <Col md={1} xs={1} className="mt-3">
                 <Form.Check
                   required
@@ -470,7 +529,11 @@ function AddViewQuestion() {
                     </MathJaxContext>
                   )}
                 </div>
-              </Col>
+              </Col> <div style={{display:"flex"}}>
+
+           <input type="file" onChange={handleImageChange} accept="/image/*" />
+            <Button onClick={()=>handleUpload("option4")}>Option 4</Button>  
+              </div>
               <Col md={1} xs={1} className="mt-3">
                 <Form.Check
                   required
@@ -512,7 +575,12 @@ function AddViewQuestion() {
             <Col md={12}>
               <Form.Group className="mb-3">
                 <Form.Label>SOLUTION LATEX (TEXT BOX)</Form.Label>
-                <Form.Control
+
+  <div style={{display:"flex"}}>
+
+           <input type="file" onChange={handleImageChange} accept="/image/*" />
+            <Button onClick={()=>handleUpload("solLatex")}>Upload Solution Latex</Button>  
+              </div>               <Form.Control
                   required
                   as="textarea"
                   rows="4"
@@ -559,9 +627,11 @@ function AddViewQuestion() {
             </Col>
 
             <Col md={6}>
+            {userType === "superadmin" && (
               <Button variant="success" className="m-1" size="lg" type="submit">
                 {id ? "Update" : "Submit"}
               </Button>
+            )}
             </Col>
           </Row>
         </Form>

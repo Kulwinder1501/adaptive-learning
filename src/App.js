@@ -9,6 +9,7 @@ import ManageUsers from "./pages/ManageUsers";
 import ViewUser from "./pages/ViewUser";
 import ViewQuestion from "./pages/ViewQuestion";
 import LogOut from "./pages/LogOut";
+// import UploadImage from "./pages/uploadImage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path={"/dashboard"} element={<Dashboard />} />
+        {/* <Route path={"/upload-image"} element={<UploadImage />} /> */}
         <Route path={"/add-question"} element={<AddQuestion />} />
         <Route path={"/view-question/:id/"} element={<ViewQuestion />} />
         <Route path={"/users"} element={<Users />} />
