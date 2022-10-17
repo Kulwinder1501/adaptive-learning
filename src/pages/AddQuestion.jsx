@@ -129,6 +129,7 @@ const handleUpload = (name ,check) => {
     const storageRef = ref(storage, `/images/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
     console.log("Upload Task",uploadTask)
+    setLoading(true)
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -137,13 +138,16 @@ const handleUpload = (name ,check) => {
           );
           setPercent(percent);
       },
-      (err) => console.log(err),
+      (err) => {console.log(err)
+      setLoading(false)},
       () => {
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
               console.log("Download URL",url);
               const doubleCheck = values[name] == undefined ? "":values[name]
               const dataa = doubleCheck + `${doubleCheck!==""?"\n":""} <img src="${url}"/>`
     setValues({ ...values, [name]: dataa });
+    setFile("")
+    setLoading(false)
           });
         }
         );
@@ -368,7 +372,7 @@ const handleUpload = (name ,check) => {
             </Col>
           </Row>
           <input type="file" onChange={handleImageChange} accept="/image/*" />
-            <Button onClick={()=>handleUpload("quesLatex")}>Upload Question Latex</Button>
+            <Button onClick={()=>handleUpload("quesLatex")}>Upload Image</Button>
       
       {
         imgUrl &&
@@ -409,7 +413,7 @@ const handleUpload = (name ,check) => {
               <div style={{display:"flex"}}>
 
            <input type="file" onChange={handleImageChange} accept="/image/*" />
-            <Button onClick={()=>handleUpload("option1")}>Option 1</Button>  
+            <Button onClick={()=>handleUpload("option1")} style={{marginBottom:10}}>Upload Image</Button>  
               </div>
               <Col md={1} xs={1} className="mt-3">
                 <Form.Check
@@ -451,7 +455,7 @@ const handleUpload = (name ,check) => {
  <div style={{display:"flex"}}>
 
            <input type="file" onChange={handleImageChange} accept="/image/*" />
-            <Button onClick={()=>handleUpload("option2")}>Option 2</Button>  
+            <Button onClick={()=>handleUpload("option2")} style={{marginBottom:10}}>Upload Image</Button>  
               </div>
               <Col md={1} xs={1} className="mt-3">
                 <Form.Check
@@ -490,7 +494,7 @@ const handleUpload = (name ,check) => {
               </Col> <div style={{display:"flex"}}>
 
            <input type="file" onChange={handleImageChange} accept="/image/*" />
-            <Button onClick={()=>handleUpload("option3")}>Option 3</Button>  
+            <Button onClick={()=>handleUpload("option3")} style={{marginBottom:10}}>Upload Image</Button>  
               </div>
               <Col md={1} xs={1} className="mt-3">
                 <Form.Check
@@ -529,7 +533,7 @@ const handleUpload = (name ,check) => {
               </Col> <div style={{display:"flex"}}>
 
            <input type="file" onChange={handleImageChange} accept="/image/*" />
-            <Button onClick={()=>handleUpload("option4")}>Option 4</Button>  
+            <Button onClick={()=>handleUpload("option4")} style={{marginBottom:10}}>Upload Image</Button>  
               </div>
               <Col md={1} xs={1} className="mt-3">
                 <Form.Check
