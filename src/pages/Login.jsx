@@ -21,6 +21,7 @@ import { app, firebaseConfig } from "../firebase/fireabseConfig";
 import { httpClient } from "../constants/api";
 import { ADMIN } from "../constants/AppConst";
 import { initializeApp } from "firebase/app";
+import Preloader from "../components/Preloader";
 // import Preloader from "../components/Preloader";
 
 function Login() {
@@ -30,6 +31,7 @@ function Login() {
     password: "quesportal@123456",
   });
   const [loading, setLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const handleChange = (e) => {
@@ -40,16 +42,21 @@ function Login() {
     }
   };
   const firebaseFunction = async () => {
+
     const app = initializeApp(firebaseConfig);
     var re = /\S+@\S+\.\S+/;
     const emailCheck = re.test(values.email);
     const auth = getAuth(app);
     if (emailCheck) {
+      setPageLoading(true)
       await sendPasswordResetEmail(auth, values.email)
         .then(() => {
-          alert("Forget Password Email Send");
+          setPageLoading(false)
+          alert("Forget Password Email Sent");
+
         })
         .catch((error) => {
+          setPageLoading(false)
           alert("Invalid Email: Email don't Exist");
         });
     } else {
@@ -164,6 +171,7 @@ function Login() {
           </Row>
         </Container>
       </section>
+      <Preloader show={pageLoading}/>
     </main>
   );
 }
