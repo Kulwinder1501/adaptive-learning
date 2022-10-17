@@ -124,11 +124,12 @@ const [percent, setPercent] = useState()
 const handleUpload = (name ,check) => {
   if (!file) {
       alert("Please upload an image first!");
-  }
-  const storageRef = ref(storage, `/images/${file.name}`);
-  const uploadTask = uploadBytesResumable(storageRef, file);
-  console.log("Upload Task",uploadTask)
-  uploadTask.on(
+  }else {
+
+    const storageRef = ref(storage, `/images/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    console.log("Upload Task",uploadTask)
+    uploadTask.on(
       "state_changed",
       (snapshot) => {
           const percent = Math.round(
@@ -141,31 +142,32 @@ const handleUpload = (name ,check) => {
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
               console.log("Download URL",url);
               const doubleCheck = values[name] == undefined ? "":values[name]
-              const dataa = doubleCheck + `\n <img src="${url}"/>`
+              const dataa = doubleCheck + `${doubleCheck!==""?"\n":""} <img src="${url}"/>`
     setValues({ ...values, [name]: dataa });
           });
+        }
+        );
       }
-  );
 };
   const handleLatexData = (text) => {
     // console.log({ text });
-    // const test = text.replace(new RegExp("\f"), "\\f");
-    // let find = "<latex>";
-    // let re = new RegExp(find, "g");
-    // // let str = test.replace(re, "\\(");
+    const test = text.replace(new RegExp("\f"), "\\f");
+    let find = "<latex>";
+    let re = new RegExp(find, "g");
+    let str = test.replace(re, "\\(");
 
-    // let find2 = "</latex>";
-    // let re2 = new RegExp(find2, "g");
+    let find2 = "</latex>";
+    let re2 = new RegExp(find2, "g");
 
-    // let str2 = str.replace(re2, `\\)`);
+    let str2 = str.replace(re2, `\\)`);
 
-    // let find3 = "//";
-    // let re3 = new RegExp(find3, "g");
+    let find3 = "//";
+    let re3 = new RegExp(find3, "g");
 
-    // let str3 = str2.replace(re3, "/");
-    // // console.log({ str3 });
+    let str3 = str2.replace(re3, "/");
+    // console.log({ str3 });
 
-    // return parse(str3);
+    return parse(str3);
   };
 
   return (
@@ -367,12 +369,7 @@ const handleUpload = (name ,check) => {
           </Row>
           <input type="file" onChange={handleImageChange} accept="/image/*" />
             <Button onClick={()=>handleUpload("quesLatex")}>Upload Question Latex</Button>
-      {
-        !imgUrl &&
-        <div className='outerbar'>
-          <div className='innerbar' style={{ width: `${progresspercent}%` }}>{progresspercent}%</div>
-        </div>
-      }
+      
       {
         imgUrl &&
         <img src={imgUrl} alt='uploaded file' height={200} />

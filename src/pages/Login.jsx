@@ -12,10 +12,15 @@ import {
 } from "@themesberg/react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import BgImage from "../assets/img/illustrations/signin.svg";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { app } from "../firebase/fireabseConfig";
+import {
+  getAuth,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { app, firebaseConfig } from "../firebase/fireabseConfig";
 import { httpClient } from "../constants/api";
 import { ADMIN } from "../constants/AppConst";
+import { initializeApp } from "firebase/app";
 // import Preloader from "../components/Preloader";
 
 function Login() {
@@ -34,7 +39,23 @@ function Login() {
       setError(false);
     }
   };
-
+  const firebaseFunction = async () => {
+    const app = initializeApp(firebaseConfig);
+    var re = /\S+@\S+\.\S+/;
+    const emailCheck = re.test(values.email);
+    const auth = getAuth(app);
+    if (emailCheck) {
+      await sendPasswordResetEmail(auth, values.email)
+        .then(() => {
+          alert("Forget Password Email Send");
+        })
+        .catch((error) => {
+          alert("Invalid Email: Email don't Exist");
+        });
+    } else {
+      alert("Email Invalid");
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -111,9 +132,7 @@ function Login() {
                     </Form.Group>
                   </Form.Group>
                   {error && (
-                    <Alert variant="warning">
-                     Invalid Login Credentials
-                    </Alert>
+                    <Alert variant="warning">Invalid Login Credentials</Alert>
                   )}
                   <Button
                     variant="primary"
@@ -123,6 +142,22 @@ function Login() {
                   >
                     {loading ? "Please wait.." : "Sign in"}
                   </Button>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <p></p>
+
+                    <p></p>
+                    <p
+                      // variant="danger"
+                      onClick={() => firebaseFunction()}
+                      className=" mt-2 forget"
+                      disabled={loading}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Forget Password
+                    </p>
+                  </div>
                 </Form>
               </div>
             </Col>

@@ -41,6 +41,17 @@ p {
 .lili {
   list-style-type: none;
   cursor: pointer;
+  padding: 4px 0 4px 6px;
+  background-color:white ;
+  transition: 1  all;
+  border-radius: 5px;
+
+}
+.lili:hover{
+  background-color: gray;
+  color:white;
+  transition: 200ms;
+  border-radius: 5px;
 }
 /* .main-class > input */
 
@@ -70,4 +81,6 @@ input:-ms-input-placeholder {
 .error-message {
   color: firebrick;
   font-size: small;
+  margin: -19px 0 -12px 0 ;
 }
+

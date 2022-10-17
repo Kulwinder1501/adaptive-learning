@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyCMgz4lVZUuPC5Q9sBdClOfRasopP-064o",
   authDomain: "ques-portal.firebaseapp.com",
   projectId: "ques-portal",
