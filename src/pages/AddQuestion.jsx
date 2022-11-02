@@ -144,7 +144,7 @@ function AddViewQuestion() {
           setPercent(percent);
         },
         (err) => {
-          console.log(err);
+          console.log(err.message);
           alert("Please Try Again");
           setFile("");
           setLoadingCheck("");

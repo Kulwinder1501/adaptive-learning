@@ -46,6 +46,7 @@ function Dashboard() {
   const handleGetAllQuestions = async (filters) => {
     try {
       setLoading(true);
+      console.log(page);
       const result = await httpClient.post(
         `${QUESTION.GET_ALL}?page=${page}&size=${10}`,
         filters
